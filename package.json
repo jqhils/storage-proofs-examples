@@ -10,6 +10,10 @@
     "@noir-lang/noir_js": "1.0.0-beta.3",
     "@nomicfoundation/hardhat-toolbox": "^5.0.0",
     "hardhat": "^2.22.14",
+    "hardhat-gas-reporter": "^2.2.3",
     "hardhat-noir": "^0.4.0"
+  },
+  "dependencies": {
+    "toml": "^3.0.0"
   }
 }

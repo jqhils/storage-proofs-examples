@@ -1,4 +1,7 @@
 [workspace]
 members = [
-"my_noir"
+"my_noir",
+"hello_world",
+"native_balance",
+"token_balance"
 ]

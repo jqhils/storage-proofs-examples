@@ -9,7 +9,11 @@ const config: HardhatUserConfig = {
   },
   noir: {
     version: "1.0.0-beta.3",
+    flavor: "ultra_plonk",
   },
+  gasReporter: {
+    enabled: (process.env.REPORT_GAS) ? true : false,
+  }
 };
 
 export default config;
