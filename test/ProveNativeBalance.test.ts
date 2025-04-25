@@ -65,7 +65,7 @@ describe("ProveNativeBalance", () => {
 
         const { proof, publicInputs } = await backend.generateProof(witness);
 
-        console.log(`publicInputs: ${publicInputs}`);
+        // console.log(`publicInputs: ${publicInputs}`);
 
         // The first public input should be verified_balance
         //   expect(BigInt(publicInputs[0])).to.eq(BigInt(input.verified_balance));
