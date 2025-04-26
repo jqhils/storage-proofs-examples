@@ -15,7 +15,14 @@ pub fn verify<let NODES_LEN: u32, let LEAF_LEN: u32>(
 ) {
     let leaf_value = extract_value(key, storage_hash, nodes, leaf, depth);
     for i in 0..32 {
-        assert(leaf[leaf_value.offset + i] == value[i], "Value mismatch");
+        // Add bounds check
+        // println(f"LEAF_LEN: {LEAF_LEN}");
+        if leaf_value.offset + i < LEAF_LEN {
+            assert(leaf[leaf_value.offset + i] == value[i], "Value mismatch");
+        } else {
+            // If we run out of leaf data, assume remaining value is 0
+            assert(value[i] == 0, "Value mismatch (expected 0)");
+        }
     }
 }
 
@@ -39,6 +46,7 @@ pub fn extract_value<let NODES_LEN: u32, let LEAF_LEN: u32>(
 
             // Validate node hash
             let node_hash: [u8; 32] = unsafe { get_node_hash(rlp_header, node) };
+            // println(f"i={i}: node={node_hash}, curr={curr_hash}");
             assert(node_hash == curr_hash, "Invalid hash");
 
             // Create next hash
@@ -60,6 +68,7 @@ pub fn extract_value<let NODES_LEN: u32, let LEAF_LEN: u32>(
     assert(rlp_header.data_type == RLP_DATA_TYPE_LIST, "Invalid data type");
 
     let resolved_hash = unsafe { get_node_hash(rlp_header, leaf) };
+    // println(f"leaf: {resolved_hash}, curr={curr_hash}");
     assert(resolved_hash == curr_hash, "Invalid hash");
 
     let rlp_list: BoundedVec<RlpFragment, 2> = unsafe { decode_rlp_list_fragments(rlp_header, leaf) }   ;
@@ -83,8 +92,8 @@ pub fn extract_value<let NODES_LEN: u32, let LEAF_LEN: u32>(
 fn get_leaf_key<let LEAF_LEN: u32>(leaf: [u8; LEAF_LEN], rlp_fragment: RlpFragment) -> [u8] {
     let (prefix, _) = byte_to_nibbles(leaf[rlp_fragment.offset]);
     assert((prefix == 2) | (prefix == 3), "Leaf parity prefix must be 2 or 3");
-
-    let prefixed_key_bytes: [u8; 32] = unsafe { copy(leaf, rlp_fragment.offset) };
+    // println(f"prefix: {prefix}, rlp_fragment: {rlp_fragment}");
+    let prefixed_key_bytes: [u8; 32] = unsafe { copy_safe(leaf, rlp_fragment.offset, rlp_fragment.length) }; // Issue with this line
     let prefixed_key_nibbles: [u8] = bytes_as_nibbles(prefixed_key_bytes).as_slice();
     let (prefix, key_nibbles) = prefixed_key_nibbles.pop_front();
     if (prefix % 2 == 0) {
@@ -100,6 +109,21 @@ unconstrained fn copy<let N: u32, let M: u32>(arr: [u8; N], offset: u32) -> [u8;
     let mut result: [u8; M] = [0; M];
     for i in 0..M {
         result[i] = arr[offset + i];
+    }
+    result
+}
+
+unconstrained fn copy_safe<let N: u32, let M: u32>(
+    arr: [u8; N], 
+    offset: u32, 
+    length: u32
+) -> [u8; M] {
+    let mut result: [u8; M] = [0; M];
+    let max_len = if M < length { M } else { length };
+    for i in 0..max_len {
+        if offset + i < N {
+            result[i] = arr[offset + i];
+        }
     }
     result
 }

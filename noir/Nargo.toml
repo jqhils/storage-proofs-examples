@@ -3,5 +3,8 @@ members = [
 "my_noir",
 "hello_world",
 "native_balance",
-"token_balance"
+"token_balance",
+"prove_hist_punk_ownership",
+"state_proof",
+"storage_proof"
 ]

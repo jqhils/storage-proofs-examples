@@ -1,0 +1,8 @@
+[package]
+name = "storage_proof"
+type = "bin"
+authors = ["jqhils"]
+compiler_version = ">=0.38.0"
+
+[dependencies]
+lib = { path = "../lib/noir-lib" }
