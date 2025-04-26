@@ -4,6 +4,7 @@ use dep::std::hash::keccak256;
 fn main(
     block_header: [u8; 532],
     block_hash: [u8; 32],
+    // block_height: Field,
     // State Proof
     state_root: [u8; 32],
     account_nodes: [[u8; 532]; 7],
@@ -20,7 +21,6 @@ fn main(
     account_address: [u8; 32],
     owner_address: [u8; 32],
     balance_slot: Field,
-    // verified_balance: Field
 ) {
     // State Proof
     let calc_block_hash = keccak256(block_header, 532);
@@ -181,6 +181,7 @@ fn test_main() {
     main(
         block_header,
         block_hash,
+        // 17000000,
         state_root,
         account_nodes,
         account_leaf,
@@ -193,10 +194,5 @@ fn test_main() {
         account_address,
         owner_address,
         balance_slot
-        // 8453,
-        // 0,
-        // owner_address,
-        // balance_slot,
-        // verified_balance,
     );
 }

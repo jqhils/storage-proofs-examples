@@ -1,20 +1,40 @@
 <img align="right" width="150" height="150" top="100" src="https://raw.githubusercontent.com/olehmisar/hardhat-noir/main/assets/banner.jpg" >
 
-# Hardhat Noir Starter
+# Storage Proofs for Historical Ethereum Data
 
-This project demonstrates Noir integration with Hardhat using [Hardhat Noir](https://github.com/olehmisar/hardhat-noir) plugin.
+This project demonstrates a variety of interesting use cases for historical storage proofs on Ethereum.
+
+Proof/Verification of each scenario is carried out using both vanilla Solidity and the utilization of the Noir Barretenburg prover system.
+
+Scenarios:
+* Generic State Proof
+* Generic Storage Proof
+* Proving historical ownership of a Crypto PUNK NFT
+* Proving activity performed by an Ethereum account between two block heights
 
 ## Getting started
 
 Clone this repository and run `npm install`:
 
 ```sh
-npx degit olehmisar/hardhat-noir-starter my-first-noir-project
-cd my-first-noir-project
+cd ethereum-storage-proofs
 npm install
 ```
 
-Then, run `npm run test` to run the tests.
+Then, define `MAINNET_RPC_URL` in a `.env` file at the root directory.
+
+Finally, run `npm run test` to run the tests.
+
+## Software Libraries & API requirements
+* Noir (version 1.0.0-beta.3)
+* Hardhat (node version 22)
+* Alchemy RPC Endpoint
+
+### Switching proof systems between UltraPLONK and UltraHONK
+By default, the project is set to use UltraPLONK for the backend prover, but can be changed to UltraHONK by removing this line in the `hardhat.config.ts` settings file:
+```
+flavor: "ultra_plonk",
+```
 
 ## Development
 

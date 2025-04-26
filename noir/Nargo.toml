@@ -5,6 +5,7 @@ members = [
 "native_balance",
 "token_balance",
 "prove_hist_punk_ownership",
+"prove_eoa_activity",
 "state_proof",
 "storage_proof"
 ]

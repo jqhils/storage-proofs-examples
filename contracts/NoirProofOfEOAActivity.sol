@@ -1,10 +1,10 @@
 // SPDX-License-Identifier: SEE LICENSE IN LICENSE
 pragma solidity ^0.8.27;
 
-// import {HonkVerifier} from "../noir/target/prove_hist_punk_ownership.sol";
-import {UltraVerifier} from "../noir/target/prove_hist_punk_ownership_ultra_plonk.sol";
+// import {HonkVerifier} from "../noir/target/prove_eoa_activity.sol";
+import {UltraVerifier} from "../noir/target/prove_eoa_activity_ultra_plonk.sol";
 
-contract NoirProofOfPUNKOwnership {
+contract NoirProofOfEOAActivity {
     // HonkVerifier public verifier = new HonkVerifier();
     UltraVerifier public verifier = new UltraVerifier();
     bool public isVerified = false;

@@ -5,10 +5,10 @@ import { UltraPlonkBackend } from '@aztec/bb.js';
 const fs = require("fs");
 let toml = require("toml");
 
-describe("NoirProofOfPUNKOwnership", () => {
+describe("NoirProofOfEOAActivity", () => {
     describe("deployment", () => {
         it("should deploy the contract", async () => {
-            const contractFactory = await ethers.getContractFactory("NoirProofOfPUNKOwnership");
+            const contractFactory = await ethers.getContractFactory("NoirProofOfEOAActivity");
             const contract = await contractFactory.deploy();
             await contract.waitForDeployment();
         });
@@ -17,17 +17,17 @@ describe("NoirProofOfPUNKOwnership", () => {
     describe("proving and verifying native balance on-chain", () => {
         it("proves and verifies native balance on-chain", async () => {
         // Deploy a verifier contract
-        const contractFactory = await ethers.getContractFactory("NoirProofOfPUNKOwnership");
+        const contractFactory = await ethers.getContractFactory("NoirProofOfEOAActivity");
         const contract = await contractFactory.deploy();
         await contract.waitForDeployment();
 
         // Generate a proof
-        const { noir, backend } = await hre.noir.getCircuit("prove_hist_punk_ownership", UltraPlonkBackend);
-        // const { noir, backend } = await hre.noir.getCircuit("prove_hist_punk_ownership");
+        const { noir, backend } = await hre.noir.getCircuit("prove_eoa_activity", UltraPlonkBackend);
+        // const { noir, backend } = await hre.noir.getCircuit("prove_eoa_activity");
 
-        let witnessData = fs.readFileSync(`./test/inputs/TestNoirProofOfPUNKOwnershipProver.toml`);
+        let witnessData = fs.readFileSync(`./test/inputs/TestNoirProofOfEOAActivityProver.toml`);
         let input = toml.parse(witnessData);
-        fs.writeFileSync('./test/inputs/prove-hist-punk-ownership-input-data.json', JSON.stringify(input, null, 2));
+        fs.writeFileSync('./test/inputs/prove-eoa-activity-input-data.json', JSON.stringify(input, null, 2));
 
         // Start timing
         const start = Date.now();
@@ -39,13 +39,14 @@ describe("NoirProofOfPUNKOwnership", () => {
         // });
 
         const { proof, publicInputs } = await backend.generateProof(witness);
-        console.log(`publicInputs: ${publicInputs}`);
 
         // End timing and calculate duration
         const end = Date.now();
         const duration = end - start;
 
         console.log(`Proving step took ${duration} milliseconds`);
+
+        console.log(`publicInputs: ${publicInputs}`);
 
         // The first public input should be verified_balance
         //   expect(BigInt(publicInputs[0])).to.eq(BigInt(input.verified_balance));

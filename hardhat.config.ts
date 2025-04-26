@@ -6,6 +6,9 @@ import * as dotenv from "dotenv";
 dotenv.config();
 
 const config: HardhatUserConfig = {
+  mocha: {
+    timeout: 100000000
+  },
   solidity: {
     version: "0.8.29",
     settings: { optimizer: { enabled: true, runs: 100000000 } },

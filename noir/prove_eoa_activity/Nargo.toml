@@ -1,5 +1,5 @@
 [package]
-name = "storage_proof"
+name = "prove_eoa_activity"
 type = "bin"
 authors = ["REDACTED"]
 compiler_version = ">=0.38.0"
