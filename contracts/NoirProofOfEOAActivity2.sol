@@ -1,24 +1,22 @@
 // SPDX-License-Identifier: SEE LICENSE IN LICENSE
 pragma solidity ^0.8.27;
 
-// import {HonkVerifier} from "../noir/target/prove_hist_punk_ownership.sol";
-import {UltraVerifier} from "../noir/target/prove_hist_punk_ownership2_ultra_plonk.sol";
+// import {HonkVerifier} from "../noir/target/prove_eoa_activity.sol";
+import {UltraVerifier} from "../noir/target/prove_eoa_activity2_ultra_plonk.sol";
 
-contract NoirProofOfPUNKOwnership2 {
+contract NoirProofOfEOAActivity2 {
     // HonkVerifier public verifier = new HonkVerifier();
     UltraVerifier public verifier = new UltraVerifier();
     bool public isVerified = false;
     function verify(
         bytes calldata proof,
         uint8[32] calldata y,
-        bytes32 block_hash,
-        address nft_address,
-        address owner_address
+        bytes32 block_hash_1,
+        bytes32 block_hash_2,
+        address account_address
     ) external returns (bool) {
-        bytes32 padded_nft = bytes32(uint256(uint160(nft_address)));
-        bytes32 padded_owner = bytes32(uint256(uint160(owner_address)));
-
-        bytes memory input = abi.encodePacked(block_hash, padded_nft, padded_owner);
+        bytes32 padded_account_address = bytes32(uint256(uint160(account_address)));
+        bytes memory input = abi.encodePacked(block_hash_1, block_hash_2, padded_account_address);
         bytes32 computed_hash = keccak256(input);
 
         // Check that computed_hash matches circuit public input
@@ -29,7 +27,6 @@ contract NoirProofOfPUNKOwnership2 {
         for (uint i = 0; i < 32; i++) {
             publicInputs[i] = bytes32(uint256(y[i]));
         }
-
         bool result = verifier.verify(proof, publicInputs);
         isVerified = result;
         return result;
@@ -43,4 +40,3 @@ contract NoirProofOfPUNKOwnership2 {
         return result;
     }
 }
-

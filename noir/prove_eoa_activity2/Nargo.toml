@@ -1,0 +1,8 @@
+[package]
+name = "prove_eoa_activity2"
+type = "bin"
+authors = ["REDACTED"]
+compiler_version = ">=0.38.0"
+
+[dependencies]
+lib = { path = "../lib/noir-lib" }

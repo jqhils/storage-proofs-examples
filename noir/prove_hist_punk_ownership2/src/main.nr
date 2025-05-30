@@ -33,7 +33,7 @@ fn main(
     }
     let computed_hash = keccak256(concat, 96);
     // let computed_hash_field = field_from_bytes_32_trunc(computed_hash);
-    println(computed_hash);
+    // println(computed_hash);
     for i in 0..32 {
         assert(pub_hash[i] == computed_hash[i], "Hash of inputs does not match public input");
     }

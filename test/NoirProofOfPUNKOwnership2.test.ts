@@ -24,7 +24,7 @@ describe("NoirProofOfPUNKOwnership2", () => {
         // Generate a proof
         const { noir, backend } = await hre.noir.getCircuit("prove_hist_punk_ownership2", UltraPlonkBackend);
 
-        let witnessData = fs.readFileSync(`./test/inputs/TestNoirProofOfPUNKOwnershipProver.toml`);
+        let witnessData = fs.readFileSync(`./test/inputs/TestNoirProofOfPUNKOwnershipProver2.toml`);
         let input = toml.parse(witnessData);
         fs.writeFileSync('./test/inputs/prove-hist-punk-ownership-input-data.json', JSON.stringify(input, null, 2));
 
@@ -46,8 +46,8 @@ describe("NoirProofOfPUNKOwnership2", () => {
         const block_hash = "0x96cfa0fb5e50b0a3f6cc76f3299cfbf48f17e8b41798d1394474e67ec8a97e9f";
         const nft_address = "0xb47e3cd837ddf8e4c57f05d70ab865de6e193bbb";
         const owner_address = "0x0000000000000000000000000000000000000000";
-        const pub_hash = "0x38d790028ec95d65701930152769c3869fe2e19e1af0314a3bc769922386d2f5";
-        const tx = await contract.verify(proof, publicInputs, block_hash, nft_address, owner_address, pub_hash);
+        // const pub_hash = "0x38d790028ec95d65701930152769c3869fe2e19e1af0314a3bc769922386d2f5";
+        const tx = await contract.verify(proof, publicInputs, block_hash, nft_address, owner_address);
         await tx.wait();
 
         // Check the result using the public isVerified variable
