@@ -10,40 +10,49 @@ contract NoirProofOfPUNKOwnership2 {
     bool public isVerified = false;
     function verify(
         bytes calldata proof,
-        uint8[96] calldata y,
+        uint8[32] calldata y,
         bytes32 block_hash,
         address nft_address,
-        address owner_address
+        address owner_address,
+        bytes32 pub_hash_field
     ) external returns (bool) {
-        bytes20 nft_addr_as_bytes20 = bytes20(nft_address);
-        bytes20 owner_addr_as_bytes20 = bytes20(owner_address);
 
-        // Verify block_hash
-        for (uint i = 0; i < 32; i++) {
-            if (y[i] != uint8(block_hash[i])) {
-                revert("First 32 bytes of y[0:32] do not match block_hash");
-            }
-        }
-        // Verify nft_address
-        for (uint i = 0; i < 20; i++) {
-            if (y[32+12+i] != uint8(nft_addr_as_bytes20[i])) {
-                revert("Last 20 bytes of y[32+12:] do not match nft_address");
-            }
-        }
-        // Verify owner_address
-        for (uint i = 0; i < 20; i++) {
-            if (y[64+12+i] != uint8(owner_addr_as_bytes20[i])) {
-                revert("Last 20 bytes of y[64+12:] do not match owner_address");
-            }
-        }
+        // // Verify pub_hash
+        // for (uint i = 0; i < 32; i++) {
+        //     if (y[i] != uint8(block_hash[i])) {
+        //         revert("First 32 bytes of y[0:32] do not match block_hash");
+        //     }
+        // }
+        // // Verify nft_address
+        // for (uint i = 0; i < 20; i++) {
+        //     if (y[32+12+i] != uint8(nft_addr_as_bytes20[i])) {
+        //         revert("Last 20 bytes of y[32+12:] do not match nft_address");
+        //     }
+        // }
+        // // Verify owner_address
+        // for (uint i = 0; i < 20; i++) {
+        //     if (y[64+12+i] != uint8(owner_addr_as_bytes20[i])) {
+        //         revert("Last 20 bytes of y[64+12:] do not match owner_address");
+        //     }
+        // }
         
-        bytes32[] memory publicInputs = new bytes32[](96);
-        for (uint i = 0; i < 96; i++) {
+        bytes32 padded_nft = bytes32(uint256(uint160(nft_address)));
+        bytes32 padded_owner = bytes32(uint256(uint160(owner_address)));
+
+        bytes memory input = abi.encodePacked(block_hash, padded_nft, padded_owner);
+        bytes32 computed_hash = keccak256(input);
+        // Check that computed_hash matches pub_hash_field
+        require(computed_hash == pub_hash_field, "Hash mismatch");
+
+        bytes32[] memory publicInputs = new bytes32[](32);
+        for (uint i = 0; i < 32; i++) {
             publicInputs[i] = bytes32(uint256(y[i]));
         }
-        // publicInputs[0] = bytes32(y);
+
+        // publicInputs[32] = bytes32(pub_hash_field);
         bool result = verifier.verify(proof, publicInputs);
         isVerified = result;
         return result;
     }
 }
+

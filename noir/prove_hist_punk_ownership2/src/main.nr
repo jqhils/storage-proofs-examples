@@ -1,9 +1,10 @@
+// use dep::std::convert::bytes32_to_field;
 use dep::lib::{ecrecover, proof, rlp};
 use dep::std::hash::keccak256;
 
 fn main(
     block_header: [u8; 532],
-    block_hash: pub [u8; 32],
+    block_hash: [u8; 32],
     // block_height: Field,
     // State Proof
     state_root: [u8; 32],
@@ -18,10 +19,26 @@ fn main(
     storage_depth: u32,
     storage_value: Field,
     // Verification Data
-    account_address: pub [u8; 32],
-    owner_address: pub [u8; 32],
+    account_address: [u8; 32],
+    owner_address: [u8; 32],
     balance_slot: Field,
+    pub_hash: pub [u8; 32]
 ) {
+    // Verify pub_hash
+    let mut concat: [u8; 96] = [0; 96];
+    for i in 0..32 {
+        concat[i] = block_hash[i];
+        concat[32 + i] = account_address[i];
+        concat[64 + i] = owner_address[i];
+    }
+    let computed_hash = keccak256(concat, 96);
+    // let computed_hash_field = field_from_bytes_32_trunc(computed_hash);
+    println(computed_hash);
+    for i in 0..32 {
+        assert(pub_hash[i] == computed_hash[i], "Hash of inputs does not match public input");
+    }
+    // assert(pub_hash == computed_hash, "Hash of inputs does not match public input");
+    
     // State Proof
     let calc_block_hash = keccak256(block_header, 532);
     assert(block_hash == calc_block_hash, "Block hash value mismatch");
@@ -81,6 +98,24 @@ unconstrained fn get_start_idx(array: [u8; 32]) -> u32 {
     start_idx
 }
 
+// Convert a 32 byte array to a field element by truncating the final byte
+pub fn field_from_bytes_32_trunc(bytes32: [u8; 32]) -> Field {
+    let mut v = 1;
+    let mut high = 0 as Field;
+    let mut low = 0 as Field;
+
+    for i in 0..15 {
+        // covers bytes 16..30 (31 is truncated and ignored)
+        low = low + (bytes32[15 + 15 - i] as Field) * v;
+        v = v * 256;
+        // covers bytes 0..14
+        high = high + (bytes32[14 - i] as Field) * v;
+    }
+    // covers byte 15
+    low = low + (bytes32[15] as Field) * v;
+
+    low + high * v
+}
 
 #[test]
 fn test_main() {
@@ -178,6 +213,7 @@ fn test_main() {
     
     // let balance_slot_bytes: [u8; 32] = [0xdf, 0x7d, 0xe2, 0x5b, 0x7f, 0x1f, 0xd6, 0xd0, 0xb5, 0x20, 0x5f, 0x0e, 0x18, 0xf1, 0xf3, 0x5b, 0xd7, 0xb8, 0xd8, 0x4c, 0xce, 0x33, 0x65, 0x88, 0xd1, 0x84, 0x53, 0x3c, 0xe4, 0x3a, 0x6f, 0x76];
     let balance_slot: Field = 11;
+    let pub_hash: [u8; 32] = [0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00];
     main(
         block_header,
         block_hash,
@@ -193,6 +229,7 @@ fn test_main() {
         storage_value,
         account_address,
         owner_address,
-        balance_slot
+        balance_slot,
+        pub_hash
     );
 }
