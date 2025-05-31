@@ -23,16 +23,20 @@ describe("NoirProofOfPUNKOwnership2", () => {
 
         // Generate a proof
         const { noir, backend } = await hre.noir.getCircuit("prove_hist_punk_ownership2", UltraPlonkBackend);
+        // const { noir, backend } = await hre.noir.getCircuit("prove_hist_punk_ownership2");
 
         let witnessData = fs.readFileSync(`./test/inputs/TestNoirProofOfPUNKOwnershipProver2.toml`);
         let input = toml.parse(witnessData);
-        fs.writeFileSync('./test/inputs/prove-hist-punk-ownership-input-data.json', JSON.stringify(input, null, 2));
+        fs.writeFileSync('./test/inputs/prove-hist-punk-ownership-input-data2.json', JSON.stringify(input, null, 2));
 
         // Start timing
         const start = Date.now();
 
         const { witness } = await noir.execute(input);
 
+        // const { proof, publicInputs } = await backend.generateProof(witness, {
+        // keccak: true,
+        // });
         const { proof, publicInputs } = await backend.generateProof(witness);
         console.log(`publicInputs: ${publicInputs}`);
 

@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: SEE LICENSE IN LICENSE
 pragma solidity ^0.8.27;
 
-// import {HonkVerifier} from "../noir/target/prove_eoa_activity.sol";
+// import {HonkVerifier} from "../noir/target/prove_eoa_activity2.sol";
 import {UltraVerifier} from "../noir/target/prove_eoa_activity2_ultra_plonk.sol";
 
 contract NoirProofOfEOAActivity2 {

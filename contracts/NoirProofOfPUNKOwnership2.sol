@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: SEE LICENSE IN LICENSE
 pragma solidity ^0.8.27;
 
-// import {HonkVerifier} from "../noir/target/prove_hist_punk_ownership.sol";
+// import {HonkVerifier} from "../noir/target/prove_hist_punk_ownership2.sol";
 import {UltraVerifier} from "../noir/target/prove_hist_punk_ownership2_ultra_plonk.sol";
 
 contract NoirProofOfPUNKOwnership2 {

@@ -23,11 +23,11 @@ describe("NoirProofOfEOAActivity2", () => {
 
         // Generate a proof
         const { noir, backend } = await hre.noir.getCircuit("prove_eoa_activity2", UltraPlonkBackend);
-        // const { noir, backend } = await hre.noir.getCircuit("prove_eoa_activity");
+        // const { noir, backend } = await hre.noir.getCircuit("prove_eoa_activity2");
 
         let witnessData = fs.readFileSync(`./test/inputs/TestNoirProofOfEOAActivityProver2.toml`);
         let input = toml.parse(witnessData);
-        fs.writeFileSync('./test/inputs/prove-eoa-activity-input-data.json', JSON.stringify(input, null, 2));
+        fs.writeFileSync('./test/inputs/prove-eoa-activity-input-data2.json', JSON.stringify(input, null, 2));
 
         // Start timing
         const start = Date.now();
